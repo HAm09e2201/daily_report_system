@@ -64,9 +64,7 @@ public class EmployeeAction extends ActionBase {
         //一覧画面を表示
         forward(ForwardConst.FW_EMP_INDEX);
 
-    }//追記
-
-
+    } //追記
     /**
      * 新規登録画面を表示する
      * @throws ServletException
@@ -79,7 +77,6 @@ public class EmployeeAction extends ActionBase {
 
         //新規登録画面を表示
         forward(ForwardConst.FW_EMP_NEW);
-
     } //追記
     /**
      * 新規登録を行う
@@ -129,7 +126,7 @@ public class EmployeeAction extends ActionBase {
             }
 
         }
-    }
+    } //追記
     /**
      * 詳細画面を表示する
      * @throws ServletException
@@ -220,6 +217,27 @@ public class EmployeeAction extends ActionBase {
                 //一覧画面にリダイレクト
                 redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);
             }
+        }
+    } //追記
+
+    /**
+     * 論理削除を行う
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void destroy() throws ServletException, IOException {
+
+        //CSRF対策 tokenのチェック
+        if (checkToken()) {
+
+            //idを条件に従業員データを論理削除する
+            service.destroy(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+
+            //セッションに削除完了のフラッシュメッセージを設定
+            putSessionScope(AttributeConst.FLUSH, MessageConst.I_DELETED.getMessage());
+
+            //一覧画面にリダイレクト
+            redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);
         }
     }
 
